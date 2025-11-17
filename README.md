@@ -1,1 +1,1 @@
-# - JWT Token with Swagger
+# ASP.NET JSON Web Token (JWT) with Swagger
