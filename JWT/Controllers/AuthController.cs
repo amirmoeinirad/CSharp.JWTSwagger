@@ -7,7 +7,7 @@ using JWTwithSwagger.Models;
 
 namespace JWTwithSwagger.Controllers
 {
-    // The controller class that handles authentication-related actions.
+    // The controller class that handles authentication-related actions.    
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
@@ -16,6 +16,7 @@ namespace JWTwithSwagger.Controllers
         private readonly IConfiguration _config;
         private readonly SymmetricSecurityKey _key;
 
+
         // (2)        
         public AuthController(IConfiguration config, SymmetricSecurityKey key)
         {
@@ -23,16 +24,21 @@ namespace JWTwithSwagger.Controllers
             _key = key;
         }
 
+
         // (3)
         // Login endpoint
-        // [HttpPost("Login")]: This means the controller will respond to POST requests at /api/auth/login.        
+        // [HttpPost("Login")]: This means the controller will respond to POST requests at this URL: /api/auth/login.        
         [HttpPost("login")]
+        // 'FromBody' indicates that the data for the 'model' parameter will come from the body of the HTTP request.    
         public IActionResult Login([FromBody] LoginModel model)
         {
             // Dummy check! Normally, you'd authenticate against a database.
             if (model.Username == "admin" && model.Password == "password")
             {
+                // A custom method to generate a JWT for the authenticated user.
                 var token = GenerateJwtToken(model.Username);
+
+                // Return the token to the client.
                 return Ok(new { token });
             }
 
@@ -43,8 +49,6 @@ namespace JWTwithSwagger.Controllers
 
         // (4)
         // This method is used to create a JWT for the user based on their username.
-        // The GenerateJwtToken() method can also be implemented in a separate service class (registered as a scoped service in program.cs)
-        // The service can then be called in AuthController.
         private string GenerateJwtToken(string username)
         {                        
             var claims = new[]
@@ -75,6 +79,8 @@ namespace JWTwithSwagger.Controllers
 
             // This converts the JwtSecurityToken into a string (the actual token that can be sent to the client).
             // WriteToken() serializes a JWT as a JWE or JWS.
+            // 'Serialize' means converting an object into a format that can be easily stored or transmitted.
+            // Here, it converts the JWT object into a compact string format.
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }

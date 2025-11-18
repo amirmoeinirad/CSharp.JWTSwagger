@@ -8,7 +8,10 @@ namespace JWTwithSwagger.Controllers
     [ApiController]    
     public class TestController : Controller
     {
-        // Accessing this action method requires authorization. (Token must be provided by the client GET request.)        
+        // Accessing this action method requires authorization. (Token must be provided by the client GET request.)
+        // Therefore, the client must first access the server at /api/auth/login to obtain a JWT token.
+        // Then, the client must include this token in the Authorization header of the GET request to access this protected endpoint
+        // at this URL: /api/test/secure.
         [HttpGet("secure")]
         [Authorize]
         public IActionResult SecureEndpoint()
